@@ -1,0 +1,407 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "role": "formateur",
+      "name": "Karim Benali",
+      "email": "k.benali@ofppt.ma",
+      "password": "formateur123",
+      "specialite": "Développement Digital",
+      "etablissementId": "e1",
+      "cmc": "CMC Rabat-Salé-Kénitra",
+      "anciennete": 8,
+      "avatar": "KB",
+      "color": "#003f7f",
+      "classIds": [
+        "c1",
+        "c2"
+      ]
+    },
+    {
+      "id": "u2",
+      "role": "formateur",
+      "name": "Nadia El Fassi",
+      "email": "n.elfassi@ofppt.ma",
+      "password": "formateur123",
+      "specialite": "Gestion & Commerce",
+      "etablissementId": "e2",
+      "cmc": "CMC Rabat-Salé-Kénitra",
+      "anciennete": 5,
+      "avatar": "NF",
+      "color": "#00a8e1",
+      "classIds": [
+        "c3"
+      ]
+    },
+    {
+      "id": "u3",
+      "role": "stagiaire",
+      "name": "Ahmed El Mansouri",
+      "email": "ahmed.elmansouri@stagiaire.ofppt.ma",
+      "password": "stagiaire123",
+      "cef": "R147258369",
+      "classId": "c1",
+      "filiere": "Développement Digital - Web Full Stack",
+      "niveau": "TS - 2ème Année",
+      "etablissementId": "e1",
+      "promotion": "2024-2026",
+      "avatar": "AM",
+      "color": "#ff6b35"
+    },
+    {
+      "id": "u4",
+      "role": "stagiaire",
+      "name": "Fatima Zahra Moussaoui",
+      "email": "fatima.moussaoui@stagiaire.ofppt.ma",
+      "password": "stagiaire123",
+      "cef": "R147258370",
+      "classId": "c1",
+      "filiere": "Développement Digital - Web Full Stack",
+      "niveau": "TS - 2ème Année",
+      "etablissementId": "e1",
+      "promotion": "2024-2026",
+      "avatar": "FM",
+      "color": "#ec4899"
+    },
+    {
+      "id": "u5",
+      "role": "stagiaire",
+      "name": "Yassine Tahiri",
+      "email": "yassine.tahiri@stagiaire.ofppt.ma",
+      "password": "stagiaire123",
+      "cef": "R147258371",
+      "classId": "c1",
+      "filiere": "Développement Digital - Web Full Stack",
+      "niveau": "TS - 2ème Année",
+      "etablissementId": "e1",
+      "promotion": "2024-2026",
+      "avatar": "YT",
+      "color": "#10b981"
+    },
+    {
+      "id": "u6",
+      "role": "stagiaire",
+      "name": "Salma Bennis",
+      "email": "salma.bennis@stagiaire.ofppt.ma",
+      "password": "stagiaire123",
+      "cef": "R147258372",
+      "classId": "c1",
+      "filiere": "Développement Digital - Web Full Stack",
+      "niveau": "TS - 2ème Année",
+      "etablissementId": "e1",
+      "promotion": "2024-2026",
+      "avatar": "SB",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "u7",
+      "role": "stagiaire",
+      "name": "Omar Alaoui",
+      "email": "omar.alaoui@stagiaire.ofppt.ma",
+      "password": "stagiaire123",
+      "cef": "R147258373",
+      "classId": "c1",
+      "filiere": "Développement Digital - Web Full Stack",
+      "niveau": "TS - 2ème Année",
+      "etablissementId": "e1",
+      "promotion": "2024-2026",
+      "avatar": "OA",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "u8",
+      "role": "stagiaire",
+      "name": "Nour Eddine Rami",
+      "email": "noureddine.rami@stagiaire.ofppt.ma",
+      "password": "stagiaire123",
+      "cef": "R147258374",
+      "classId": "c2",
+      "filiere": "Infrastructure Digitale - Systèmes et Réseaux",
+      "niveau": "TS - 1ère Année",
+      "etablissementId": "e1",
+      "promotion": "2025-2027",
+      "avatar": "NR",
+      "color": "#06b6d4"
+    }
+  ],
+  "classes": [
+    {
+      "id": "c1",
+      "nom": "DEV201",
+      "filiere": "Développement Digital - Web Full Stack",
+      "code": "DWFS",
+      "niveau": "TS - 2ème Année",
+      "effectif": 24,
+      "etablissementId": "e1",
+      "formateurId": "u1",
+      "promotion": "2024-2026",
+      "salle": "Salle Informatique A",
+      "anneeScolaire": "2025-2026"
+    },
+    {
+      "id": "c2",
+      "nom": "IDSR101",
+      "filiere": "Infrastructure Digitale - Systèmes et Réseaux",
+      "code": "IDSR",
+      "niveau": "TS - 1ère Année",
+      "effectif": 22,
+      "etablissementId": "e1",
+      "formateurId": "u1",
+      "promotion": "2025-2027",
+      "salle": "Salle Réseau B",
+      "anneeScolaire": "2025-2026"
+    },
+    {
+      "id": "c3",
+      "nom": "TSC201",
+      "filiere": "Technicien Spécialisé en Commerce",
+      "code": "TSC",
+      "niveau": "TS - 2ème Année",
+      "effectif": 28,
+      "etablissementId": "e2",
+      "formateurId": "u2",
+      "promotion": "2024-2026",
+      "salle": "Salle Gestion A",
+      "anneeScolaire": "2025-2026"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "p1",
+      "titre": "Architecture Microservices avec Docker",
+      "module": "M204 - Création d'applications Cloud native",
+      "description": "Présentation sur l'architecture microservices, conteneurisation Docker et orchestration avec Kubernetes. Inclure une démo live.",
+      "type": "collective",
+      "duree": 45,
+      "dateCreation": "2026-03-15",
+      "dateLimite": "2026-04-20",
+      "classId": "c1",
+      "formateurId": "u1",
+      "stagiairesAssignes": [
+        "u3",
+        "u4",
+        "u5",
+        "u6"
+      ],
+      "consignes": "Présentation de 45 minutes avec démo live, slides + rapport PDF obligatoire",
+      "criteres": {
+        "contenu": 40,
+        "presentation": 30,
+        "demoTechnique": 20,
+        "reponseQuestions": 10
+      },
+      "statut": "en_cours",
+      "uploads": {},
+      "notes": {},
+      "repartition": [
+        {
+          "user": {
+            "id": "u3",
+            "name": "Stagiaire 1",
+            "weight": 1,
+            "r": 0.6924486217463208
+          },
+          "part": "Introduction"
+        },
+        {
+          "user": {
+            "id": "u5",
+            "name": "Stagiaire 3",
+            "weight": 1,
+            "r": 0.5327563371036246
+          },
+          "part": "Développement"
+        },
+        {
+          "user": {
+            "id": "u6",
+            "name": "Stagiaire 4",
+            "weight": 1,
+            "r": 0.24442090209577083
+          },
+          "part": "Conclusion"
+        },
+        {
+          "user": {
+            "id": "u4",
+            "name": "Stagiaire 2",
+            "weight": 1,
+            "r": 0.2161470518160883
+          },
+          "part": "Démonstration"
+        }
+      ]
+    },
+    {
+      "id": "p2",
+      "titre": "Sécurité Web — OWASP Top 10",
+      "module": "M109 - Sécurité des systèmes d'information",
+      "description": "Analyse des 10 vulnérabilités OWASP : XSS, CSRF, injections SQL, avec démonstrations et solutions préventives.",
+      "type": "individuelle",
+      "duree": 30,
+      "dateCreation": "2026-03-10",
+      "dateLimite": "2026-04-05",
+      "classId": "c1",
+      "formateurId": "u1",
+      "stagiairesAssignes": [
+        "u3"
+      ],
+      "consignes": "30 minutes de présentation, slides PowerPoint, rapport Word 10 pages minimum",
+      "criteres": {
+        "contenu": 50,
+        "presentation": 30,
+        "reponseQuestions": 20
+      },
+      "statut": "termine",
+      "uploads": {
+        "u3": {
+          "fichier": "owasp_presentation_ahmed.pptx",
+          "date": "2026-04-03",
+          "url": "#"
+        }
+      },
+      "notes": {
+        "u3": 16.5
+      },
+      "repartition": {}
+    },
+    {
+      "id": "p3",
+      "titre": "React Hooks Avancés — useCallback, useMemo, useReducer",
+      "module": "M202 - Développement Front-End",
+      "description": "Deep dive dans les hooks avancés de React 18, optimisation des performances et patterns modernes.",
+      "type": "individuelle",
+      "duree": 25,
+      "dateCreation": "2026-03-20",
+      "dateLimite": "2026-04-15",
+      "classId": "c1",
+      "formateurId": "u1",
+      "stagiairesAssignes": [
+        "u4"
+      ],
+      "consignes": "Code sandbox en live obligatoire, expliquer les cas d'usage concrets",
+      "criteres": {
+        "contenu": 45,
+        "demoTechnique": 35,
+        "reponseQuestions": 20
+      },
+      "statut": "en_retard",
+      "uploads": {},
+      "notes": {},
+      "repartition": {}
+    },
+    {
+      "id": "p4",
+      "titre": "Projet Fil Rouge — Plateforme E-Commerce Full Stack",
+      "module": "M207 - Projet de fin de formation",
+      "description": "Présentation finale du projet de fin de formation : application e-commerce complète avec React, Node.js et PostgreSQL.",
+      "type": "collective",
+      "duree": 60,
+      "dateCreation": "2026-02-01",
+      "dateLimite": "2026-06-30",
+      "classId": "c1",
+      "formateurId": "u1",
+      "stagiairesAssignes": [
+        "u3",
+        "u4",
+        "u5",
+        "u6",
+        "u7"
+      ],
+      "consignes": "Soutenance complète avec démo de l'application déployée en production",
+      "criteres": {
+        "contenu": 30,
+        "presentation": 20,
+        "demoTechnique": 35,
+        "rapport": 15
+      },
+      "statut": "en_cours",
+      "uploads": {},
+      "notes": {},
+      "repartition": {}
+    },
+    {
+      "id": "p5",
+      "titre": "CI/CD avec GitHub Actions et Docker",
+      "module": "M205 - DevOps et Déploiement",
+      "description": "Mise en place d'un pipeline CI/CD complet avec GitHub Actions, tests automatisés et déploiement sur cloud.",
+      "type": "individuelle",
+      "duree": 30,
+      "dateCreation": "2026-04-01",
+      "dateLimite": "2026-04-25",
+      "classId": "c1",
+      "formateurId": "u1",
+      "stagiairesAssignes": [
+        "u5"
+      ],
+      "consignes": "Présenter le pipeline fonctionnel avec un repo GitHub réel",
+      "criteres": {
+        "contenu": 40,
+        "demoTechnique": 40,
+        "reponseQuestions": 20
+      },
+      "statut": "en_cours",
+      "uploads": {},
+      "notes": {},
+      "repartition": {}
+    },
+    {
+      "id": "p6",
+      "titre": "Base de données NoSQL — MongoDB et Mongoose",
+      "module": "M203 - Développement Back-End",
+      "description": "Comparaison SQL vs NoSQL, modélisation de données avec MongoDB, utilisation de Mongoose dans une API Node.js.",
+      "type": "individuelle",
+      "duree": 25,
+      "dateCreation": "2026-04-05",
+      "dateLimite": "2026-04-30",
+      "classId": "c1",
+      "formateurId": "u1",
+      "stagiairesAssignes": [
+        "u6"
+      ],
+      "consignes": "Inclure des exemples pratiques de requêtes d'agrégation",
+      "criteres": {
+        "contenu": 50,
+        "demoTechnique": 30,
+        "reponseQuestions": 20
+      },
+      "statut": "en_cours",
+      "uploads": {},
+      "notes": {},
+      "repartition": {}
+    }
+  ],
+  "notifications": [
+    {
+      "id": "n1",
+      "userId": "u3",
+      "type": "deadline",
+      "titre": "Deadline approchante",
+      "message": "La présentation 'Architecture Microservices' est due dans 7 jours",
+      "date": "2026-04-13",
+      "lu": false,
+      "presentationId": "p1"
+    },
+    {
+      "id": "n2",
+      "userId": "u4",
+      "type": "retard",
+      "titre": "Présentation en retard",
+      "message": "Votre présentation 'React Hooks Avancés' est en retard. Contactez votre formateur.",
+      "date": "2026-04-13",
+      "lu": false,
+      "presentationId": "p3"
+    },
+    {
+      "id": "n3",
+      "userId": "u3",
+      "type": "note",
+      "titre": "Note reçue",
+      "message": "Votre présentation 'Sécurité Web' a été notée : 16.5/20. Félicitations !",
+      "date": "2026-04-10",
+      "lu": true,
+      "presentationId": "p2"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
