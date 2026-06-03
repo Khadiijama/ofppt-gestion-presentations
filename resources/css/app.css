@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../**/*.jsx';
+
+@theme {
+    --font-sans: 'Poppins', 'Inter', sans-serif;
+    --color-ofppt-blue: #0066CC;
+    --color-ofppt-lightblue: #4DA6FF;
+    --color-ofppt-bg: #F8FAFC;
+    --color-ofppt-card: #FFFFFF;
+    --color-ofppt-text-main: #1F2937;
+    --color-ofppt-text-sec: #6B7280;
+    --color-ofppt-success: #22C55E;
+    --color-ofppt-warning: #F59E0B;
+    --color-ofppt-error: #EF4444;
+    --color-ofppt-border: #E5E7EB;
+}

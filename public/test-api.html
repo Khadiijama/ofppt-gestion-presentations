@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OFPPT CMC - API Manual Tester</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1f2937;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: #374151;
+            --font-main: 'Outfit', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            line-height: 1.5;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .token-status {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            max-width: 400px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent-red);
+            box-shadow: 0 0 8px var(--accent-red);
+        }
+
+        .status-dot.active {
+            background-color: var(--accent-green);
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 350px 1fr 1fr;
+            gap: 1.5rem;
+            height: calc(100vh - 140px);
+        }
+
+        @media (max-width: 1200px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            color: #ffffff;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--bg-tertiary), #374151);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-weight: 500;
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: var(--text-secondary);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-green), #047857);
+            border: none;
+            color: white;
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent-red), #b91c1c);
+            border: none;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        input, select, textarea {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-family: var(--font-main);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .response-console {
+            background-color: #05070c;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            overflow: auto;
+            flex-grow: 1;
+            white-space: pre-wrap;
+            color: #a7f3d0;
+        }
+
+        .console-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-main);
+            font-size: 0.85rem;
+            background-color: var(--bg-tertiary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-get { background-color: rgba(16, 185, 129, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .badge-post { background-color: rgba(59, 130, 246, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .badge-delete { background-color: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+        .badge-status { background-color: var(--bg-primary); color: white; border: 1px solid var(--border-color); }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: var(--font-main);
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--bg-tertiary);
+            color: white;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .form-section {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scrollable-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div>
+                <h1>OFPPT / CMC</h1>
+                <div class="subtitle">API Interactive Manual Tester</div>
+            </div>
+        </div>
+        
+        <div class="token-status">
+            <div id="statusDot" class="status-dot"></div>
+            <div style="flex-grow: 1;">
+                <div style="font-size: 0.85rem; font-weight: 600;" id="statusText">Non Connecté</div>
+                <div style="font-size: 0.75rem; color: var(--text-secondary); font-family: var(--font-code); word-break: break-all;" id="tokenDisplay">Aucun token actif</div>
+            </div>
+            <button class="btn btn-danger" style="padding: 0.4rem 0.75rem; font-size: 0.8rem;" onclick="logout()">
+                <i class="fa-solid fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="grid-container">
+        <!-- CARD 1: AUTHENTICATION -->
+        <div class="card">
+            <h2><i class="fa-solid fa-lock"></i> Authentification</h2>
+            
+            <div class="form-section">
+                <div class="form-title"><i class="fa-solid fa-bolt"></i> Connexions Rapides (Seeder)</div>
+                <button class="btn btn-primary" onclick="quickLogin('formateur@ofppt.ma')">
+                    <i class="fa-solid fa-chalkboard-user"></i> Connexion Formateur
+                </button>
+                <button class="btn btn-success" onclick="quickLogin('stagiaire@ofppt.ma')">
+                    <i class="fa-solid fa-user-graduate"></i> Connexion Stagiaire
+                </button>
+            </div>
+
+            <div class="form-section">
+                <div class="form-title"><i class="fa-solid fa-user-plus"></i> Inscription Stagiaire</div>
+                <div class="form-group">
+                    <label>Nom Complet</label>
+                    <input type="text" id="regName" value="Kamal Oudiri">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" value="kamal@ofppt.ma">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="regPassword" value="password">
+                </div>
+                <div class="form-group">
+                    <label>Rôle</label>
+                    <select id="regRole">
+                        <option value="stagiaire">Stagiaire</option>
+                        <option value="formateur">Formateur</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Établissement</label>
+                    <input type="text" id="regEtablissement" value="CMC Rabat">
+                </div>
+                <button class="btn btn-primary" onclick="registerUser()">S'inscrire et se connecter</button>
+            </div>
+        </div>
+
+        <!-- CARD 2: ACTIONS PANEL -->
+        <div class="card">
+            <h2><i class="fa-solid fa-gears"></i> Actions API disponibles</h2>
+            
+            <div class="tabs">
+                <button id="tabFormateur" class="tab-btn active" onclick="switchTab('formateur')">Espace Formateur</button>
+                <button id="tabStagiaire" class="tab-btn" onclick="switchTab('stagiaire')">Espace Stagiaire</button>
+            </div>
+
+            <div class="scrollable-content">
+                <!-- FORMATEUR ACTIONS -->
+                <div id="formateurActions" class="actions-section">
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="fetchDashboard()">
+                            <i class="fa-solid fa-chart-line"></i> Consulter Dashboard Formateur
+                        </button>
+                        
+                        <div class="form-section">
+                            <div class="form-title"><i class="fa-solid fa-users"></i> Classes</div>
+                            <button class="btn" style="width: 100%;" onclick="fetchClasses()">
+                                Voir mes classes
+                            </button>
+                            <div class="form-group" style="margin-top: 0.5rem;">
+                                <label>Créer une classe (Nom / Filière)</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input type="text" id="classNom" placeholder="DEV-203" style="width: 50%;">
+                                    <input type="text" id="classFiliere" placeholder="Dev Cloud" style="width: 50%;">
+                                </div>
+                                <button class="btn btn-success" style="margin-top: 0.5rem;" onclick="createClass()">Créer la classe</button>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-title"><i class="fa-solid fa-file-powerpoint"></i> Présentations</div>
+                            <button class="btn" style="width: 100%;" onclick="fetchPresentations()">
+                                Voir mes présentations
+                            </button>
+                            <div class="form-group" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                                <label>Nouvelle présentation</label>
+                                <input type="text" id="presTitre" placeholder="Titre">
+                                <textarea id="presDesc" placeholder="Description"></textarea>
+                                <input type="date" id="presDate" value="2026-06-30">
+                                <input type="number" id="presClasseId" placeholder="ID de la classe (ex: 1)">
+                                <button class="btn btn-success" onclick="createPresentation()">Créer et Assigner</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STAGIAIRE ACTIONS -->
+                <div id="stagiaireActions" class="actions-section hidden">
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <button class="btn btn-success" onclick="fetchDashboard()">
+                            <i class="fa-solid fa-chart-pie"></i> Consulter Dashboard Stagiaire
+                        </button>
+                        
+                        <button class="btn" onclick="fetchPresentations()">
+                            <i class="fa-solid fa-book"></i> Voir mes présentations assignées
+                        </button>
+
+                        <div class="form-section">
+                            <div class="form-title"><i class="fa-solid fa-upload"></i> Envoyer un rendu (Fichier)</div>
+                            <div class="form-group">
+                                <label>ID Présentation</label>
+                                <input type="number" id="uploadPresId" placeholder="Ex: 1">
+                            </div>
+                            <div class="form-group">
+                                <label>Fichier à téléverser</label>
+                                <input type="file" id="uploadFile">
+                            </div>
+                            <button class="btn btn-primary" onclick="uploadRendu()">Déposer le travail</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 3: CONSOLE OUTPUT -->
+        <div class="card">
+            <h2><i class="fa-solid fa-terminal"></i> Console de Réponse</h2>
+            
+            <div class="console-meta">
+                <div>Méthode : <span id="respMethod" class="badge badge-get">GET</span></div>
+                <div>Status : <span id="respStatus" class="badge badge-status">---</span></div>
+            </div>
+            
+            <div style="font-size: 0.85rem; color: var(--text-secondary); word-break: break-all;" id="respUrl">
+                Aucune requête envoyée pour le moment.
+            </div>
+
+            <pre id="responseConsole" class="response-console">Les réponses d'API au format JSON s'afficheront ici...</pre>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000';
+        let currentToken = localStorage.getItem('api_token') || '';
+        let currentRole = localStorage.getItem('user_role') || 'formateur';
+
+        // Initialiser l'état visuel du Token
+        updateTokenUI();
+
+        function switchTab(role) {
+            currentRole = role;
+            localStorage.setItem('user_role', role);
+            
+            document.getElementById('tabFormateur').classList.toggle('active', role === 'formateur');
+            document.getElementById('tabStagiaire').classList.toggle('active', role === 'stagiaire');
+            
+            document.getElementById('formateurActions').classList.toggle('hidden', role !== 'formateur');
+            document.getElementById('stagiaireActions').classList.toggle('hidden', role !== 'stagiaire');
+        }
+
+        // Garder le bon onglet ouvert au rafraîchissement
+        switchTab(currentRole);
+
+        function updateTokenUI() {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            const display = document.getElementById('tokenDisplay');
+            
+            if (currentToken) {
+                dot.classList.add('active');
+                text.innerText = "Connecté (" + (localStorage.getItem('user_name') || 'Utilisateur') + ")";
+                display.innerText = "Token: " + currentToken.substring(0, 15) + "...";
+            } else {
+                dot.classList.remove('active');
+                text.innerText = "Non Connecté";
+                display.innerText = "Aucun token actif";
+            }
+        }
+
+        async function makeRequest(endpoint, method = 'GET', body = null, isMultipart = false) {
+            const url = `${API_URL}${endpoint}`;
+            const headers = {
+                'Accept': 'application/json'
+            };
+
+            if (currentToken) {
+                headers['Authorization'] = `Bearer ${currentToken}`;
+            }
+
+            if (!isMultipart && body) {
+                headers['Content-Type'] = 'application/json';
+            }
+
+            // Mettre à jour la console avant l'appel
+            document.getElementById('respUrl').innerText = url;
+            document.getElementById('respMethod').innerText = method;
+            document.getElementById('respMethod').className = `badge badge-${method.toLowerCase()}`;
+            document.getElementById('responseConsole').innerText = "Chargement en cours...";
+            document.getElementById('respStatus').innerText = "WAIT";
+
+            try {
+                const options = {
+                    method: method,
+                    headers: headers
+                };
+
+                if (body) {
+                    options.body = isMultipart ? body : JSON.stringify(body);
+                }
+
+                const response = await fetch(url, options);
+                const status = response.status;
+                
+                document.getElementById('respStatus').innerText = status;
+                
+                // Si c'est un téléchargement de fichier
+                if (endpoint.includes('/download') && response.ok) {
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    
+                    // Extraire le nom du fichier si dispo
+                    const disposition = response.headers.get('content-disposition');
+                    let filename = "document_telecharge";
+                    if (disposition && disposition.indexOf('attachment') !== -1) {
+                        const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                        const matches = filenameRegex.exec(disposition);
+                        if (matches != null && matches[1]) { 
+                            filename = matches[1].replace(/['"]/g, '');
+                        }
+                    }
+                    
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    
+                    document.getElementById('responseConsole').innerText = `[SUCCÈS] Le fichier "${filename}" a été téléchargé avec succès et enregistré localement.`;
+                    return;
+                }
+
+                const data = await response.json();
+                document.getElementById('responseConsole').innerText = JSON.stringify(data, null, 4);
+
+                return { status, data };
+            } catch (error) {
+                document.getElementById('respStatus').innerText = "ERR";
+                document.getElementById('responseConsole').innerText = `Erreur de connexion : ${error.message}\nAssurez-vous que Laravel est démarré sur ${API_URL}`;
+                return null;
+            }
+        }
+
+        async function quickLogin(email) {
+            const res = await makeRequest('/api/login', 'POST', {
+                email: email,
+                password: 'password'
+            });
+
+            if (res && res.status === 200 && res.data.token) {
+                currentToken = res.data.token;
+                localStorage.setItem('api_token', currentToken);
+                localStorage.setItem('user_name', res.data.user.name);
+                updateTokenUI();
+
+                // Basculer l'onglet selon le rôle retourné
+                switchTab(res.data.user.role);
+            }
+        }
+
+        async function registerUser() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const role = document.getElementById('regRole').value;
+            const etablissement = document.getElementById('regEtablissement').value;
+
+            const res = await makeRequest('/api/register', 'POST', {
+                name,
+                email,
+                password,
+                password_confirmation: password,
+                role,
+                etablissement
+            });
+
+            if (res && res.status === 201 && res.data.token) {
+                currentToken = res.data.token;
+                localStorage.setItem('api_token', currentToken);
+                localStorage.setItem('user_name', res.data.user.name);
+                updateTokenUI();
+                switchTab(role);
+            }
+        }
+
+        function logout() {
+            if (currentToken) {
+                makeRequest('/api/logout', 'POST');
+            }
+            currentToken = '';
+            localStorage.removeItem('api_token');
+            localStorage.removeItem('user_name');
+            updateTokenUI();
+        }
+
+        // Actions métiers
+        function fetchDashboard() {
+            makeRequest('/api/dashboard');
+        }
+
+        function fetchClasses() {
+            makeRequest('/api/classes');
+        }
+
+        function createClass() {
+            const nom = document.getElementById('classNom').value;
+            const filiere = document.getElementById('classFiliere').value;
+            makeRequest('/api/classes', 'POST', { nom, filiere });
+        }
+
+        function fetchPresentations() {
+            makeRequest('/api/presentations');
+        }
+
+        function createPresentation() {
+            const titre = document.getElementById('presTitre').value;
+            const description = document.getElementById('presDesc').value;
+            const date_limite = document.getElementById('presDate').value;
+            const classe_id = document.getElementById('presClasseId').value;
+
+            makeRequest('/api/presentations', 'POST', {
+                titre,
+                description,
+                date_limite,
+                classe_id
+            });
+        }
+
+        async function uploadRendu() {
+            const presId = document.getElementById('uploadPresId').value;
+            const fileInput = document.getElementById('uploadFile');
+
+            if (!presId || !fileInput.files[0]) {
+                alert("Veuillez saisir l'ID de la présentation et sélectionner un fichier.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            makeRequest(`/api/presentations/${presId}/upload`, 'POST', formData, true);
+        }
+
+        // Helper global pour télécharger un fichier depuis la console
+        window.downloadFile = function(uploadId) {
+            makeRequest(`/api/uploads/${uploadId}/download`);
+        };
+    </script>
+</body>
+</html>
