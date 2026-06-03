@@ -2,6 +2,8 @@
 
 > **Plateforme de gestion et de suivi des présentations pédagogiques pour les Centres de Métiers et de Compétences (CMC) de l'OFPPT.**
 
+🔗 **Dépôt GitHub :** [https://github.com/Khadiijama/ofppt-gestion-presentations](https://github.com/Khadiijama/ofppt-gestion-presentations)
+
 ---
 
 ## 📌 À propos du projet
@@ -129,8 +131,8 @@ Les présentations sont générées dynamiquement en fonction de la filière de 
 
 ```bash
 # 1. Cloner le dépôt
-git clone https://github.com/votre-compte/gestion-presentations.git
-cd gestion-presentations
+git clone https://github.com/Khadiijama/ofppt-gestion-presentations.git
+cd ofppt-gestion-presentations
 
 # 2. Installer les dépendances PHP
 composer install
