@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('titre');
             $table->text('description')->nullable();
-            $table->date('date_limite');
+            $table->dateTime('date_limite');
             $table->foreignId('classe_id')->constrained('classes')->onDelete('cascade');
             $table->foreignId('formateur_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();

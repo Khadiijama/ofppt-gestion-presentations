@@ -17,6 +17,12 @@ export default function FormateurDashboard() {
     const [selectedClassId, setSelectedClassId] = useState('');
     const [selectedStagiaireId, setSelectedStagiaireId] = useState('');
 
+    // Édition de présentation
+    const [editingPresId, setEditingPresId] = useState(null);
+    const [editPresTitre, setEditPresTitre] = useState('');
+    const [editPresDesc, setEditPresDesc] = useState('');
+    const [editPresDate, setEditPresDate] = useState('');
+
     const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'classes', 'presentations'
     const [loading, setLoading] = useState(true);
     const [notification, setNotification] = useState({ message: '', type: '' });
@@ -97,6 +103,44 @@ export default function FormateurDashboard() {
             fetchDashboardData();
         } catch (e) {
             const msg = e.response?.data?.message || 'Erreur lors de l\'ajout du stagiaire.';
+            showNotification(msg, 'error');
+        }
+    };
+
+    const startEditPresentation = (pres) => {
+        setEditingPresId(pres.id);
+        setEditPresTitre(pres.titre);
+        setEditPresDesc(pres.description || '');
+        // Formatter la date pour le champ datetime-local
+        const d = new Date(pres.date_limite);
+        const formatted = d.getFullYear() + '-' +
+            String(d.getMonth() + 1).padStart(2, '0') + '-' +
+            String(d.getDate()).padStart(2, '0') + 'T' +
+            String(d.getHours()).padStart(2, '0') + ':' +
+            String(d.getMinutes()).padStart(2, '0');
+        setEditPresDate(formatted);
+    };
+
+    const cancelEditPresentation = () => {
+        setEditingPresId(null);
+        setEditPresTitre('');
+        setEditPresDesc('');
+        setEditPresDate('');
+    };
+
+    const handleUpdatePresentation = async (e) => {
+        e.preventDefault();
+        try {
+            await api.put(`/presentations/${editingPresId}`, {
+                titre: editPresTitre,
+                description: editPresDesc,
+                date_limite: editPresDate,
+            });
+            showNotification('Présentation modifiée avec succès !');
+            cancelEditPresentation();
+            fetchDashboardData();
+        } catch (e) {
+            const msg = e.response?.data?.message || 'Erreur lors de la modification.';
             showNotification(msg, 'error');
         }
     };
@@ -291,7 +335,7 @@ export default function FormateurDashboard() {
                                                 {pres.classe?.nom}
                                             </span>
                                             <h4 className="text-ofppt-text-main font-bold text-sm inline-block mt-1">{pres.titre}</h4>
-                                            <p className="text-ofppt-text-sec text-xs mt-1 font-semibold">Limite : {new Date(pres.date_limite).toLocaleDateString()}</p>
+                                            <p className="text-ofppt-text-sec text-xs mt-1 font-semibold">Limite : {new Date(pres.date_limite).toLocaleString()}</p>
                                         </div>
                                         <div className="text-right">
                                             <span className="block text-xs text-ofppt-text-sec font-bold">{pres.uploads_count} rendu(s) / {pres.assignations_count}</span>
@@ -376,9 +420,9 @@ export default function FormateurDashboard() {
                                     ></textarea>
                                 </div>
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-xs text-ofppt-text-sec font-bold">Date Limite de rendu</label>
+                                    <label className="text-xs text-ofppt-text-sec font-bold">Date et Heure Limite de rendu</label>
                                     <input 
-                                        type="date" required value={newPresDate} onChange={(e) => setNewPresDate(e.target.value)}
+                                        type="datetime-local" required value={newPresDate} onChange={(e) => setNewPresDate(e.target.value)}
                                         className="bg-slate-50 border border-ofppt-border rounded-xl px-4 py-2 text-ofppt-text-main text-sm focus:outline-none focus:border-ofppt-blue focus:bg-white transition-all"
                                     />
                                 </div>
@@ -414,18 +458,62 @@ export default function FormateurDashboard() {
                                                 Classe {pres.classe?.nom}
                                             </span>
                                             <h3 className="text-xl font-bold text-ofppt-text-main mt-2">{pres.titre}</h3>
-                                            <p className="text-ofppt-text-sec text-xs mt-1 font-semibold">Limite : {new Date(pres.date_limite).toLocaleDateString()}</p>
+                                            <p className="text-ofppt-text-sec text-xs mt-1 font-semibold">Limite : {new Date(pres.date_limite).toLocaleString()}</p>
                                         </div>
-                                        <button 
-                                            onClick={() => handleDeletePresentation(pres.id)}
-                                            className="text-ofppt-error hover:bg-red-50 p-2 rounded-lg cursor-pointer transition-colors"
-                                            title="Supprimer la présentation"
-                                        >
-                                            <i className="fa-solid fa-trash-can text-lg"></i>
-                                        </button>
+                                        <div className="flex items-center gap-2">
+                                            <button 
+                                                onClick={() => startEditPresentation(pres)}
+                                                className="text-ofppt-blue hover:bg-blue-50 p-2 rounded-lg cursor-pointer transition-colors"
+                                                title="Modifier la présentation"
+                                            >
+                                                <i className="fa-solid fa-pen-to-square text-lg"></i>
+                                            </button>
+                                            <button 
+                                                onClick={() => handleDeletePresentation(pres.id)}
+                                                className="text-ofppt-error hover:bg-red-50 p-2 rounded-lg cursor-pointer transition-colors"
+                                                title="Supprimer la présentation"
+                                            >
+                                                <i className="fa-solid fa-trash-can text-lg"></i>
+                                            </button>
+                                        </div>
                                     </div>
 
-                                    <p className="text-ofppt-text-sec text-sm leading-relaxed mb-6 font-medium">{pres.description}</p>
+                                    {/* Formulaire d'édition inline */}
+                                    {editingPresId === pres.id ? (
+                                        <form onSubmit={handleUpdatePresentation} className="space-y-4 mb-6">
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-xs text-ofppt-text-sec font-bold">Titre</label>
+                                                <input 
+                                                    type="text" required value={editPresTitre} onChange={(e) => setEditPresTitre(e.target.value)}
+                                                    className="bg-slate-50 border border-ofppt-border rounded-xl px-4 py-2 text-ofppt-text-main text-sm focus:outline-none focus:border-ofppt-blue focus:bg-white transition-all duration-200"
+                                                />
+                                            </div>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-xs text-ofppt-text-sec font-bold">Description / Consignes</label>
+                                                <textarea 
+                                                    value={editPresDesc} onChange={(e) => setEditPresDesc(e.target.value)}
+                                                    className="bg-slate-50 border border-ofppt-border rounded-xl px-4 py-2 text-ofppt-text-main text-sm min-h-[80px] focus:outline-none focus:border-ofppt-blue focus:bg-white transition-all duration-200"
+                                                ></textarea>
+                                            </div>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-xs text-ofppt-text-sec font-bold">Date et Heure Limite</label>
+                                                <input 
+                                                    type="datetime-local" required value={editPresDate} onChange={(e) => setEditPresDate(e.target.value)}
+                                                    className="bg-slate-50 border border-ofppt-border rounded-xl px-4 py-2 text-ofppt-text-main text-sm focus:outline-none focus:border-ofppt-blue focus:bg-white transition-all duration-200"
+                                                />
+                                            </div>
+                                            <div className="flex gap-3">
+                                                <button type="submit" className="flex-1 bg-ofppt-blue hover:bg-[#0052a3] text-white py-2.5 rounded-xl text-sm font-bold transition cursor-pointer shadow-sm">
+                                                    <i className="fa-solid fa-check mr-2"></i>Enregistrer
+                                                </button>
+                                                <button type="button" onClick={cancelEditPresentation} className="flex-1 bg-slate-100 hover:bg-slate-200 border border-ofppt-border text-ofppt-text-main py-2.5 rounded-xl text-sm font-bold transition cursor-pointer">
+                                                    <i className="fa-solid fa-xmark mr-2"></i>Annuler
+                                                </button>
+                                            </div>
+                                        </form>
+                                    ) : (
+                                        <p className="text-ofppt-text-sec text-sm leading-relaxed mb-6 font-medium">{pres.description}</p>
+                                    )}
 
                                     {/* Section de suivi des rendus */}
                                     <div>

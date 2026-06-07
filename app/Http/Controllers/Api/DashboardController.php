@@ -78,26 +78,26 @@ class DashboardController extends Controller
             ->whereIn('presentation_id', $assignations)
             ->count();
 
-        $enAttente = $totalPresentations - $totalRendus;
-
-        // Présentations en attente (non rendues et date non dépassée)
-        $presentationsEnAttente = Presentation::whereIn('id', $assignations)
-            ->whereDoesntHave('uploads', function ($query) use ($user) {
-                $query->where('stagiaire_id', $user->id);
-            })
-            ->where('date_limite', '>=', now()->toDateString())
-            ->with('classe:id,nom', 'formateur:id,name')
-            ->orderBy('date_limite', 'asc')
-            ->take(5)
-            ->get();
-
         // Présentations en retard (non rendues et date dépassée)
         $presentationsEnRetard = Presentation::whereIn('id', $assignations)
             ->whereDoesntHave('uploads', function ($query) use ($user) {
                 $query->where('stagiaire_id', $user->id);
             })
-            ->where('date_limite', '<', now()->toDateString())
+            ->where('date_limite', '<', now())
             ->count();
+
+        // Présentations en attente (non rendues et date non dépassée)
+        $enAttente = $totalPresentations - $totalRendus - $presentationsEnRetard;
+
+        $presentationsEnAttente = Presentation::whereIn('id', $assignations)
+            ->whereDoesntHave('uploads', function ($query) use ($user) {
+                $query->where('stagiaire_id', $user->id);
+            })
+            ->where('date_limite', '>=', now())
+            ->with('classe:id,nom', 'formateur:id,name')
+            ->orderBy('date_limite', 'asc')
+            ->take(5)
+            ->get();
 
         return response()->json([
             'role' => 'stagiaire',

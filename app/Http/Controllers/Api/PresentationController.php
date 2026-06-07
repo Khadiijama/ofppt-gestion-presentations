@@ -56,7 +56,7 @@ class PresentationController extends Controller
         $request->validate([
             'titre' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'date_limite' => ['required', 'date', 'after_or_equal:today'],
+            'date_limite' => ['required', 'date', 'after_or_equal:now'],
             'classe_id' => ['required', 'exists:classes,id'],
         ]);
 

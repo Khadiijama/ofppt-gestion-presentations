@@ -23,7 +23,7 @@ class Presentation extends Model
     protected function casts(): array
     {
         return [
-            'date_limite' => 'date',
+            'date_limite' => 'datetime',
         ];
     }
     /**

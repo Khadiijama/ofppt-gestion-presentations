@@ -211,7 +211,7 @@ export default function StagiaireDashboard() {
                                     <div className="flex justify-between items-center mb-4">
                                         <span className="text-xs text-ofppt-text-sec font-semibold">Date limite de dépôt :</span>
                                         <span className={`text-xs font-bold ${isOverdue ? 'text-ofppt-error' : 'text-ofppt-text-main'}`}>
-                                            {new Date(pres.date_limite).toLocaleDateString()}
+                                            {new Date(pres.date_limite).toLocaleString()}
                                         </span>
                                     </div>
 

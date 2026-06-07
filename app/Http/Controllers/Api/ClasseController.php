@@ -117,9 +117,9 @@ class ClasseController extends Controller
             ], 422);
         }
 
-        if ($classe->stagiaires()->where('stagiaire_id', $stagiaire->id)->exists()) {
+        if ($stagiaire->classesStagiaire()->exists()) {
             return response()->json([
-                'message' => 'Ce stagiaire est déjà dans cette classe.',
+                'message' => 'Ce stagiaire étudie déjà dans une autre classe.',
             ], 422);
         }
 
@@ -153,6 +153,7 @@ class ClasseController extends Controller
     public function allStagiaires()
     {
         $stagiaires = User::where('role', 'stagiaire')
+            ->whereDoesntHave('classesStagiaire')
             ->select('id', 'name', 'email', 'etablissement')
             ->orderBy('name')
             ->get();
