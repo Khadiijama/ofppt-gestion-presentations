@@ -1,6 +1,6 @@
 # 🎓 Gestion des Présentations OFPPT
 
-> **Plateforme de gestion et de suivi des présentations pédagogiques pour les Centres de Métiers et de Compétences (CMC) de l'OFPPT.**
+> **Plateforme web moderne de gestion et de suivi des présentations pédagogiques pour les Centres de Métiers et de Compétences (CMC) de l'OFPPT.**
 
 🔗 **Dépôt GitHub :** [https://github.com/Khadiijama/ofppt-gestion-presentations](https://github.com/Khadiijama/ofppt-gestion-presentations)
 
@@ -8,54 +8,64 @@
 
 ## 📌 À propos du projet
 
-**Gestion des Présentations OFPPT** est une application web full-stack conçue pour digitaliser et simplifier le processus de gestion des exposés et présentations dans les établissements de formation professionnelle de l'OFPPT (Office de la Formation Professionnelle et de la Promotion du Travail).
+**Gestion des Présentations OFPPT** est une application web full-stack conçue pour digitaliser et simplifier le processus de gestion des exposés et présentations dans les établissements de formation professionnelle de l'OFPPT (*Office de la Formation Professionnelle et de la Promotion du Travail*).
 
-L'application permet aux **formateurs** de créer des présentations, de les assigner à leurs classes, et de suivre les soumissions des stagiaires. Les **stagiaires** peuvent consulter les présentations qui leur sont assignées, soumettre leurs fichiers, et suivre leurs deadlines.
+L'application permet aux **formateurs** de créer des présentations, de les assigner automatiquement à leurs classes, et de suivre les soumissions des stagiaires en temps réel. Les **stagiaires** peuvent consulter les présentations qui leur sont assignées, soumettre leurs fichiers, et suivre leurs deadlines (date et heure limites).
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture & Stack Technique
 
 | Couche | Technologie |
 |---|---|
-| Backend / API | **Laravel 11** (PHP 8.2+) |
-| Frontend | **React 18** (via Vite + Inertia-like SPA) |
-| Base de données | **SQLite** (dev) / MySQL (prod) |
-| Authentification | **Laravel Sanctum** (tokens API) |
-| Styles | **CSS3** Vanilla (design OFPPT) |
+| **Backend / API** | **Laravel 12** (PHP 8.2+) |
+| **Frontend** | **React 19** (via Vite & React Router v7) |
+| **Base de données** | **SQLite** (développement) / MySQL / PostgreSQL (production) |
+| **Authentification** | **Laravel Sanctum** (authentification d'API sécurisée) |
+| **Styles & UI** | **Tailwind CSS v4** + CSS3 (Thème personnalisé aux couleurs de l'OFPPT) |
 
 ---
 
 ## ✨ Fonctionnalités
 
-### 👨‍🏫 Formateur
-- Tableau de bord avec vue d'ensemble des classes et présentations
-- Création, modification et suppression de présentations
-- Assignation automatique des présentations à toute une classe
-- Suivi des soumissions par stagiaire (remis / en attente)
-- Gestion des deadlines avec alertes visuelles
+### 👨‍🏫 Espace Formateur
+- **Tableau de bord intelligent :** Vue globale sur les classes gérées, le nombre de stagiaires, le taux global de rendu des présentations, et une liste des présentations récentes.
+- **Gestion des classes :** Création, modification et suppression des classes de formation (filières, niveau).
+- **Gestion des stagiaires par classe :** Ajout de stagiaires (recherche parmi les comptes sans classe active) et possibilité de retirer un stagiaire d'une classe.
+- **Gestion des présentations :** 
+  - Création de sujets de présentation avec titre, description, et **date/heure limite précise**.
+  - **Assignation automatique** de la présentation à tous les stagiaires de la classe sélectionnée.
+  - Modification et suppression des présentations (la suppression nettoie automatiquement les fichiers physiques stockés sur le serveur).
+- **Suivi et évaluation des rendus :**
+  - Tableau de suivi en temps réel de l'état des rendus de chaque stagiaire (Soumis, En attente, En retard).
+  - Visualisation de la date et heure du rendu.
+  - Téléchargement direct des fichiers soumis (exposés PDF, PPTX, etc.).
 
-### 🎓 Stagiaire
-- Tableau de bord personnalisé avec les présentations assignées
-- Visualisation des détails et des consignes de chaque présentation
-- Soumission de fichiers (PDF, PPTX, DOCX…)
-- Statut en temps réel : **En attente** / **Soumis**
-- Historique des soumissions
+### 🎓 Espace Stagiaire
+- **Tableau de bord personnalisé :** Statistiques personnelles (total des présentations assignées, rendus effectués, dossiers en attente et présentations en retard).
+- **Suivi des tâches :** Liste ordonnée des présentations en attente selon l'urgence de la date limite.
+- **Consultation des consignes :** Détails et consignes formulées par le formateur pour chaque présentation.
+- **Rendu de livrables :**
+  - Import sécurisé de fichiers (PDF, PPTX, DOCX, ZIP... jusqu'à 20 Mo).
+  - Remplacement ou suppression du fichier soumis avant la date limite.
+  - Statut de soumission mis à jour en temps réel (Vert: Soumis / Jaune: En attente / Rouge: En retard).
 
 ---
 
 ## 🗄️ Structure de la base de données
 
+Le schéma de la base de données est composé de 6 tables principales structurées de manière optimale pour assurer les relations :
+
 ### Tables principales
 
 | Table | Description |
 |---|---|
-| `users` | Formateurs et Stagiaires (rôle : `formateur` / `stagiaire`) |
-| `classes` | Classes de formation (filière, formateur responsable) |
-| `classe_stagiaire` | Pivot — appartenance d'un stagiaire à une classe |
-| `presentations` | Sujets de présentation créés par les formateurs |
-| `assignations` | Attribution d'une présentation à un stagiaire |
-| `uploads` | Fichiers soumis par les stagiaires |
+| `users` | Comptes utilisateurs (formateurs et stagiaires) avec attributs `role` et `etablissement`. |
+| `classes` | Classes de formation associées à un formateur responsable. |
+| `classe_stagiaire` | Table pivot gérant l'appartenance des stagiaires aux classes. |
+| `presentations` | Sujets d'exposés créés par les formateurs, associés à une classe et possédant une `date_limite` (dateTime). |
+| `assignations` | Table pivot d'attribution individuelle des présentations aux stagiaires de la classe. |
+| `uploads` | Fichiers physiques soumis par les stagiaires avec chemin de stockage (`file_path`) et métadonnées. |
 
 ### Diagramme des relations
 
@@ -73,9 +83,9 @@ User (formateur) ──< Classe ──< Presentation
 
 ## 📊 Données de démonstration (Seeders)
 
-Le seeder inclut des données réalistes basées sur les établissements CMC de l'OFPPT :
+La base de données inclut des seeders générant un environnement de test réaliste basé sur la taxonomie des établissements **CMC (Centres de Métiers et de Compétences)** de l'OFPPT :
 
-### 👨‍🏫 Formateurs (5)
+### 👨‍🏫 Formateurs référents (5)
 
 | Nom | Email | Établissement |
 |---|---|---|
@@ -85,159 +95,146 @@ Le seeder inclut des données réalistes basées sur les établissements CMC de 
 | Nadia Cherkaoui | n.cherkaoui@ofppt.ma | CMC Rabat |
 | Youssef Ezzahiri | y.ezzahiri@ofppt.ma | CMC Rabat |
 
-### 🏫 Classes (20)
+### 🏫 Répartition des Classes (20 classes à la CMC Rabat)
+L'application génère automatiquement 4 classes par formateur réparties dans les filières d'excellence du Pôle Digital :
+- **Développement Digital** (1ère année, Web Full Stack, Applications Mobiles)
+- **Infrastructure Digitale** (1ère année, Cyber sécurité, Systèmes et Réseaux)
+- **Digital Design** (1ère année, UI Designer, UX Designer)
+- **Intelligence Artificielle** (1ère année, Assistant Data Analyst, Développeur Chatbots)
 
-| Classe | Filière | Établissement | Formateur |
-|---|---|---|---|
-| `DEVD101` | Développement Digital (1ère année) | CMC Rabat | Ahmed Bennani |
-| `DEVOWFS201` | Développement Digital option Web Full Stack (2ème année) | CMC Rabat | Ahmed Bennani |
-| `DEVOWFS202` | Développement Digital option Web Full Stack (2ème année) | CMC Rabat | Ahmed Bennani |
-| `DEVOAM201` | Développement Digital option Applications Mobiles (2ème année) | CMC Rabat | Ahmed Bennani |
-| `DEVD102` | Développement Digital (1ère année) | CMC Rabat | Fatima Z. Alaoui |
-| `DEVOWFS203` | Développement Digital option Web Full Stack (2ème année) | CMC Rabat | Fatima Z. Alaoui |
-| `DEVOWFS204` | Développement Digital option Web Full Stack (2ème année) | CMC Rabat | Fatima Z. Alaoui |
-| `DEVOAM202` | Développement Digital option Applications Mobiles (2ème année) | CMC Rabat | Fatima Z. Alaoui |
-| `INFRD101` | Infrastructure Digitale (1ère année) | CMC Rabat | Khalid Moujahid |
-| `INFRD102` | Infrastructure Digitale (1ère année) | CMC Rabat | Khalid Moujahid |
-| `IDCS201` | Infrastructure Digitale option Cyber sécurité (2ème année) | CMC Rabat | Khalid Moujahid |
-| `IDSR201` | Infrastructure Digitale option Systèmes et Réseaux (2ème année) | CMC Rabat | Khalid Moujahid |
-| `DIGD101` | Digital Design (1ère année) | CMC Rabat | Nadia Cherkaoui |
-| `DIGD102` | Digital Design (1ère année) | CMC Rabat | Nadia Cherkaoui |
-| `DIGDUI201` | Digital Design option UI Designer (2ème année) | CMC Rabat | Nadia Cherkaoui |
-| `DIGDUX201` | Digital Design option UX Designer (2ème année) | CMC Rabat | Nadia Cherkaoui |
-| `IA101` | Intelligence Artificielle (1ère année) | CMC Rabat | Youssef Ezzahiri |
-| `IA102` | Intelligence Artificielle (1ère année) | CMC Rabat | Youssef Ezzahiri |
-| `IAAD201` | Intelligence Artificielle option Assistant Data Analyst (2ème année) | CMC Rabat | Youssef Ezzahiri |
-| `IADC201` | Intelligence Artificielle option Développeur Chatbots (2ème année) | CMC Rabat | Youssef Ezzahiri |
-
-> **Total : ~370 stagiaires** répartis dans 20 classes (entre 17 et 20 stagiaires par classe), gérées par 5 formateurs à la CMC Rabat.
-
-### 📋 Présentations (Sujets type)
-
-Les présentations sont générées dynamiquement en fonction de la filière de la classe (2 à 3 sujets par classe, par exemple : *Introduction à Laravel 11* et *React JS et les Hooks* pour le Web Full Stack, *Sécurité des réseaux* pour la Cybersécurité, etc.).
+> 📊 **Volume total de données générées :**
+> - **5 formateurs** et **~370 stagiaires** (répartis de manière homogène entre 17 et 20 stagiaires par classe).
+> - **~48 présentations** créées automatiquement avec des sujets adaptés à chaque filière (ex: *React JS et les Hooks*, *Sécurité des réseaux et Pare-feu*, *Design Systems sous Figma*, *Intégration d'API LLM & LangChain*).
 
 ---
 
-## 🚀 Installation
+## 🚀 Installation & Configuration
 
-### Prérequis
-
+### Prérequis indispensables
 - **PHP** >= 8.2
 - **Composer** >= 2.x
 - **Node.js** >= 18.x & npm
-- Base de données : SQLite (inclus), MySQL ou PostgreSQL
+- Base de données locale (SQLite par défaut)
 
-### Étapes
+### Étapes d'installation
 
 ```bash
-# 1. Cloner le dépôt
+# 1. Cloner le dépôt et se placer dans le projet
 git clone https://github.com/Khadiijama/ofppt-gestion-presentations.git
 cd ofppt-gestion-presentations
 
-# 2. Installer les dépendances PHP
-composer install
-
-# 3. Installer les dépendances JavaScript
-npm install
-
-# 4. Configurer l'environnement
+# 2. Configurer le fichier d'environnement
 cp .env.example .env
-php artisan key:generate
 
-# 5. Configurer la base de données dans .env
-# Pour SQLite (par défaut) :
-# DB_CONNECTION=sqlite
+# 3. Créer la base de données SQLite (si configuré en SQLite dans .env)
+# Sous Windows (PowerShell) :
+New-Item -ItemType File -Path database/database.sqlite -Force
+# Sous Linux / macOS :
+touch database/database.sqlite
 
-# 6. Lancer les migrations et les seeders
-php artisan migrate:fresh --seed
+# 4. Installer les dépendances, générer la clé d'application et compiler le frontend (Recommandé)
+composer setup
 
-# 7. Démarrer les serveurs de développement
-php artisan serve        # Backend  → http://localhost:8000
-npm run dev              # Frontend → http://localhost:5173
+# 5. Lancer les migrations et charger les données de démonstration (Seeders)
+php artisan db:seed
+
+# 6. Démarrer les serveurs de développement (Laravel + Vite) en simultané
+composer dev
 ```
 
+*Note : La commande `composer dev` lance de façon optimisée et en arrière-plan le serveur web PHP artisan (`http://localhost:8000`), le hot-reload de Vite (`http://localhost:5173`) ainsi que le suivi des files d'attente.*
+
 ---
 
-## 🔑 Comptes de test
+## 🔑 Comptes de test préconfigurés
 
-| Rôle | Email | Mot de passe |
+Tous les comptes créés par le seeder utilisent le mot de passe générique **`password`**.
+
+| Rôle | Email de connexion | Mot de passe |
 |---|---|---|
-| **Formateur** | `formateur@ofppt.ma` | `password` |
-| **Stagiaire** | `stagiaire@ofppt.ma` | `password` |
-
-> Tous les autres comptes utilisent également le mot de passe `password`.
+| **Formateur de test** | `formateur@ofppt.ma` | `password` |
+| **Stagiaire de test** | `stagiaire@ofppt.ma` | `password` |
 
 ---
 
-## 📁 Structure du projet
+## 📁 Structure globale du projet
 
 ```
 gestion_presentations/
 ├── app/
 │   ├── Http/
-│   │   ├── Controllers/      # AuthController, ClasseController, PresentationController…
-│   │   └── Middleware/       # RoleMiddleware (formateur / stagiaire)
+│   │   ├── Controllers/
+│   │   │   └── Api/          # Contrôleurs API (Auth, Classe, Dashboard, Presentation, Upload)
+│   │   └── Middleware/       # Middleware CheckRole.php (contrôle d'accès formateur/stagiaire)
 │   └── Models/
-│       ├── User.php          # Formateurs & Stagiaires
-│       ├── Classe.php        # Classes de formation
-│       ├── Presentation.php  # Sujets de présentation
-│       ├── Assignation.php   # Assignation stagiaire ↔ présentation
-│       └── Upload.php        # Soumissions de fichiers
+│       ├── User.php          # Modèle Utilisateur (avec méthodes isFormateur() et isStagiaire())
+│       ├── Classe.php        # Modèle Classe (filière, association formateur & stagiaires)
+│       ├── Presentation.php  # Modèle Présentation (sujets et dates limites)
+│       ├── Assignation.php   # Modèle Pivot d'assignation individuelle
+│       └── Upload.php        # Modèle de fichier de rendu stagiaire
+├── bootstrap/
+│   └── app.php               # Configuration de l'application (liaison du middleware 'role')
 ├── database/
-│   ├── migrations/           # Schéma de la base de données
+│   ├── migrations/           # Définition des structures de tables SQL (9 migrations)
 │   └── seeders/
-│       └── DatabaseSeeder.php  # 92 stagiaires, 5 classes, 16 présentations
+│       └── DatabaseSeeder.php  # Alimentation de démonstration (CMC Rabat)
 ├── resources/
 │   ├── js/
-│   │   ├── pages/            # Home, Login, Register, FormateurDashboard, StagiaireDashboard
-│   │   └── components/       # Navbar, Cards, …
+│   │   ├── components/       # Composants partagés (ex: Navbar.jsx)
+│   │   ├── pages/            # Écrans (Home, Login, Register, FormateurDashboard, StagiaireDashboard)
+│   │   ├── api.js            # Configuration d'Axios (intercepteurs, base URL, Bearer Token)
+│   │   └── MainApp.jsx       # Point d'entrée React avec routage client (React Router 7)
 │   └── css/
-│       └── app.css           # Design OFPPT
-└── routes/
-    └── api.php               # Endpoints API REST
+│       └── app.css           # Thème Tailwind CSS v4 personnalisé
+├── routes/
+│   ├── api.php               # Endpoints REST API sécurisés par Laravel Sanctum
+│   └── web.php               # Route de redirection SPA globale vers welcome.blade.php
+└── vite.config.js            # Configuration du bundler Vite (React + Tailwind CSS)
 ```
 
 ---
 
-## 🔌 API Endpoints principaux
+## 🔌 Répertoire des Endpoints API
 
-| Méthode | Endpoint | Description | Accès |
+Toutes les routes ci-dessous (sauf Public) requièrent l'envoi du header `Authorization: Bearer <token_sanctum>`.
+
+| Méthode | Endpoint | Description | Rôle requis |
 |---|---|---|---|
-| `POST` | `/api/register` | Inscription | Public |
-| `POST` | `/api/login` | Connexion | Public |
-| `POST` | `/api/logout` | Déconnexion | Authentifié |
-| `GET` | `/api/user` | Profil utilisateur | Authentifié |
-| `GET` | `/api/classes` | Liste des classes | Formateur |
-| `POST` | `/api/classes` | Créer une classe | Formateur |
-| `GET` | `/api/presentations` | Mes présentations | Formateur |
-| `POST` | `/api/presentations` | Créer une présentation | Formateur |
-| `GET` | `/api/stagiaire/presentations` | Mes présentations assignées | Stagiaire |
-| `POST` | `/api/stagiaire/upload/{assignation}` | Soumettre un fichier | Stagiaire |
+| **Authentification & Session** | | | |
+| `POST` | `/api/register` | Inscription d'un nouveau compte | Public |
+| `POST` | `/api/login` | Authentification et retour du token | Public |
+| `POST` | `/api/logout` | Révocation du token courant | Authentifié |
+| `GET` | `/api/user` | Informations du profil connecté | Authentifié |
+| `GET` | `/api/dashboard` | Statistiques adaptées au rôle de l'utilisateur | Authentifié |
+| **Gestion des Classes** | | | |
+| `GET` | `/api/classes` | Récupérer la liste des classes gérées | Formateur |
+| `POST` | `/api/classes` | Créer une nouvelle classe | Formateur |
+| `GET` | `/api/classes/{id}` | Détails d'une classe (stagiaires + présentations) | Formateur |
+| `PUT` | `/api/classes/{id}` | Modifier le nom ou la filière d'une classe | Formateur |
+| `DELETE` | `/api/classes/{id}` | Supprimer une classe | Formateur |
+| **Gestion des Stagiaires** | | | |
+| `GET` | `/api/stagiaires` | Liste de tous les stagiaires libres (sans classe) | Formateur |
+| `POST` | `/api/classes/{id}/stagiaires` | Affecter un stagiaire existant à la classe | Formateur |
+| `DELETE` | `/api/classes/{classeId}/stagiaires/{stagiaireId}` | Retirer un stagiaire de la classe | Formateur |
+| **Gestion des Présentations** | | | |
+| `GET` | `/api/presentations` | Présentations créées (Formateur) ou assignées (Stagiaire) | Commun |
+| `POST` | `/api/presentations` | Créer une présentation et l'assigner à toute une classe | Formateur |
+| `GET` | `/api/presentations/{id}` | Détails d'une présentation | Commun |
+| `PUT` | `/api/presentations/{id}` | Modifier le sujet ou la date/heure limite | Formateur |
+| `DELETE` | `/api/presentations/{id}` | Supprimer une présentation (fichiers inclus) | Formateur |
+| **Gestion des Rendus (Fichiers)** | | | |
+| `POST` | `/api/presentations/{id}/upload` | Soumettre ou écraser un fichier rendu | Stagiaire |
+| `GET` | `/api/uploads/{id}/download` | Télécharger un fichier d'exposé soumis | Commun |
+| `DELETE` | `/api/uploads/{id}` | Supprimer un livrable | Commun |
 
 ---
 
-## 🏢 À propos de l'OFPPT
+## 🏢 À propos de l'OFPPT & CMC
 
-L'**Office de la Formation Professionnelle et de la Promotion du Travail** est l'opérateur principal de la formation professionnelle au Maroc. Les **CMC (Centres de Métiers et de Compétences)** sont ses établissements phares proposant des formations **Bac+2** dans les secteurs numériques et technologiques :
-
-- 🖥️ **Développement Digital** (Web Full Stack, Data Science)
-- 🌐 **Infrastructure Digitale**
-- 🔐 **Cybersécurité**
-
----
-
-## 🛠️ Technologies utilisées
-
-| Outil | Version | Usage |
-|---|---|---|
-| [Laravel](https://laravel.com/) | 11.x | Framework backend / API |
-| [React](https://react.dev/) | 18.x | Interface utilisateur |
-| [Vite](https://vitejs.dev/) | 5.x | Bundler frontend |
-| [Laravel Sanctum](https://laravel.com/docs/sanctum) | 4.x | Authentification par tokens |
-| [SQLite](https://www.sqlite.org/) | 3.x | Base de données (développement) |
+L'**Office de la Formation Professionnelle et de la Promotion du Travail (OFPPT)** est le principal opérateur de formation publique au Maroc. Ses nouveaux **Centres de Métiers et de Compétences (CMC)** proposent des formations de pointe axées sur la digitalisation, l'innovation pédagogique, et l'apprentissage par projet, notamment pour les filières du Pôle Digital.
 
 ---
 
 ## 📄 Licence
 
-Projet académique — OFPPT CMC © 2024
+Projet académique — OFPPT CMC © 2026
